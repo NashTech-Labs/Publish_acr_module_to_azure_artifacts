@@ -65,4 +65,9 @@ terraform plan -var-file="azure.tfvars"
 terraform apply -var-file="azure.tfvars"
 
 ```
+## for publishing this terraform module to the azure artifact you need to follow these steps
+1. Go to the Azure DevOps
+2. create the new pipeline where you need to choose the existing pipeline and specify the path of your yaml file
+3. Run the pipeline with the desired version of your module(you need to change your version in the metadata.yaml)
+
 
