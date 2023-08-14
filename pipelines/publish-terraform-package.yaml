@@ -1,0 +1,50 @@
+# Build pipeline
+name: "Terraform Build Pipeline for acr"
+
+trigger:
+- main
+
+pr: none
+
+parameters:
+  - name: ModuleName
+    displayName: 'Module Name'
+    default: "acr"
+    type: string
+
+pool:
+  vmImage: ubuntu-latest
+  
+resources:
+  repositories:
+    - repository: TerraformModuleTemplate
+      type: github
+      name: duck-creek/ADO.Pipelines.Templates
+      ref: feature-azure-artifacts
+      endpoint: 'Duck Creek'
+
+steps:
+    
+- checkout: self
+  displayName: Clean Checkout
+  clean: true
+
+- script: |
+     ls -a
+     Version=$(cat ./metadata.yml | awk '/version:/ {print $2}')
+     echo "##vso[task.setvariable variable=Version]$Version"
+     echo $Version
+  displayName: 'Fetch Version From Metadata'   
+  
+- template: frameWork/terraform/artifacts_registry/template/publish.yaml@TerraformModuleTemplate
+  parameters: 
+    publishDirectory: '$(Build.SourcesDirectory)'
+    feedsToUsePublish: 'internal'
+    vstsFeedPublish: 'Duck Creek/dcodnext-terraform'
+    vstsFeedPackagePublish: '${{ parameters.ModuleName }}'
+    versionOption: 'custom'
+    versionPublish: '$(Version)'
+    packagePublishDescription: 'terraform package'
+    verbosity: 'Error'
+    publishedPackageVar: "output"
+
