@@ -32,7 +32,7 @@ steps:
     command: 'publish'
     publishDirectory: '$(Build.SourcesDirectory)'
     feedsToUsePublish: 'internal'
-    vstsFeedPublish: 'Duck Creek/dcodnext-terraform'
+    vstsFeedPublish: 'Atisha/atisha-terraform'
     vstsFeedPackagePublish: '${{ parameters.ModuleName }}'
     versionOption: 'custom'
     versionPublish: '$(Version)'
